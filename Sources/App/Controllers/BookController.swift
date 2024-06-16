@@ -16,11 +16,15 @@ struct BookController: RouteCollection {
 
     @Sendable
     func index(req: Request) async throws -> [BookDTO] {
+        _ = try await req.jwt.verify(as: GoogleOAuthPayload.self)
+
         return try await Book.query(on: req.db).all().map { $0.toDTO() }
     }
 
     @Sendable
     func get(req: Request) async throws -> BookDTO {
+        _ = try await req.jwt.verify(as: GoogleOAuthPayload.self)
+
         guard let book = try await Book.find(req.parameters.get("bookID"), on: req.db) else {
             throw Abort(.notFound)
         }
@@ -30,6 +34,8 @@ struct BookController: RouteCollection {
 
     @Sendable
     func create(req: Request) async throws -> HTTPStatus {
+        _ = try await req.jwt.verify(as: GoogleOAuthPayload.self)
+
         let book = try req.content.decode(BookDTO.self).toModel()
 
         try await book.save(on: req.db)
@@ -39,6 +45,8 @@ struct BookController: RouteCollection {
 
     @Sendable
     func update(req: Request) async throws -> HTTPStatus {
+        _ = try await req.jwt.verify(as: GoogleOAuthPayload.self)
+
         let book = try req.content.decode(BookDTO.self).toModel()
 
         guard let savedBook = try await Book.find(req.parameters.get("bookID"), on: req.db) else {
@@ -62,6 +70,8 @@ struct BookController: RouteCollection {
 
     @Sendable
     func delete(req: Request) async throws -> HTTPStatus {
+        _ = try await req.jwt.verify(as: GoogleOAuthPayload.self)
+
         guard let book = try await Book.find(req.parameters.get("bookID"), on: req.db) else {
             throw Abort(.notFound)
         }

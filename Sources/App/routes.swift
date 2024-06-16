@@ -3,11 +3,13 @@ import Vapor
 
 func routes(_ app: Application) throws {
     app.get { req async in
-        "It works!"
+        "Hello, world!\nUnauthenticated!"
     }
 
-    app.get("hello") { req async -> String in
-        "Hello, world!"
+    app.get("hello") { req async throws -> String in
+        _ = try await req.jwt.verify(as: GoogleOAuthPayload.self)
+
+        return "Hello, world!\nAuthenticated!"
     }
 
     try app.register(collection: BookController())

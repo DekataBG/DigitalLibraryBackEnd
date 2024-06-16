@@ -14,7 +14,7 @@
 # Run migrations: docker-compose run migrate
 #       Stop all: docker-compose down (add -v to wipe db)
 #
-version: '3.7'
+version: '3.8'
 
 volumes:
   db_data:
@@ -31,8 +31,11 @@ services:
     image: backend:latest
     build:
       context: .
+    secrets:
+      - pem
     environment:
       <<: *shared_environment
+      PUBLIC_KEY: /run/secrets/pem
     depends_on:
       - db
     ports:
@@ -72,3 +75,7 @@ services:
       POSTGRES_DB: vapor_database
     ports:
       - '5432:5432'
+
+secrets:
+  pem:
+    file: ./public-key.txt

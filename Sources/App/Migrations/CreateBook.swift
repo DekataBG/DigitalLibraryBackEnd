@@ -20,3 +20,15 @@ struct CreateBook: AsyncMigration {
         try await database.schema("books").delete()
     }
 }
+
+struct PopulateBookTable: AsyncMigration {
+    func prepare(on database: Database) async throws {
+        for book in BooksMockData.books {
+            try await book.save(on: database)
+        }
+    }
+
+    func revert(on database: Database) async throws {
+        try await database.schema("books").delete()
+    }
+}

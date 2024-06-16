@@ -40,7 +40,7 @@ final class Book: Model, @unchecked Sendable {
 
     init() { }
 
-    init(id: UUID? = nil,
+    init(id: UUID? = UUID(),
          title: String,
          description: String,
          author: String,
