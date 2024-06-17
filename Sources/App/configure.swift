@@ -20,6 +20,7 @@ public func configure(_ app: Application) async throws {
 
     app.migrations.add(CreateBook())
     app.migrations.add(PopulateBookTable())
+    app.migrations.add(CreateUser())
 
     guard let secretKeyPath = Environment.get("PUBLIC_KEY"),
           let pem = try? String(contentsOfFile: secretKeyPath, encoding: .utf8).trimmingCharacters(in: .whitespacesAndNewlines),
